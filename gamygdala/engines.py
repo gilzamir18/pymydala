@@ -421,17 +421,23 @@ class Gamygdala:
     #You can set Gamygdala to use this function for all emotion decay by calling setDecay() and passing this function as second parameter. This function is not to be called directly.
     #@method gamygdala.linearDecay
     '''
-    def linearDecay(self, value):
+    def linearDecay(self, value, deltaTime=None):
         #assumes the decay of the emotional state intensity is linear with a factor equal to decayFactor per second.
-        return value-self.decayFactor*(self.millisPassed/1000)
+        dt = deltaTime
+        if dt is None:
+            dt = self.millisPassed/1000
+        return value-self.decayFactor*(dt)
 
     '''
     An exponential decay function that will decrease the emotion intensity of an emotion every tick by a factor defined by the decayFactor in the gamygdala instance.
     You can set Gamygdala to use this function for all emotion decay by calling setDecay() and passing this function as second parameter. This function is not to be called directly.
     @method gamygdala.exponentialDecay 
     '''
-    def exponentialDecay(self, value):
-        return value*math.pow(self.decayFactor, self.millisPassed/1000)
+    def exponentialDecay(self, value, deltaTime=None):
+        dt = deltaTime
+        if dt is None:
+            dt = self.millisPassed/1000
+        return value*math.pow(self.decayFactor, dt)
 
     def evaluateSocialEmotion(self, utility, desirability, deltaLikelihood, relation, agent):
         #This function is used to evaluate happy-for, pity, gloating or resentment.

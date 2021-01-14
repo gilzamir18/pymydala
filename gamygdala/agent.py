@@ -195,9 +195,9 @@ class Agent:
 	@method gamygdala.decayAll
 	@param {gamygdala} gamygdalaInstance A reference to the correct gamygdala instance that contains the decayFunction property to be used )(so you could use different gamygdala instances to manage different groups of  agents)
 	'''
-	def decay(self, gamygdalaInstance):
+	def decay(self, gamygdalaInstance, deltaTime=None):
 		for i in range(len(self.internalState)):
-			newIntensity=gamygdalaInstance.decayFunction(self.internalState[i].intensity)
+			newIntensity=gamygdalaInstance.decayFunction(self.internalState[i].intensity, deltaTime)
 			if newIntensity < 0:
 				self.internalState.pop(i)
 			else:
