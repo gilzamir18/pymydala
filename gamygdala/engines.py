@@ -317,7 +317,7 @@ class Gamygdala:
         else:
             if isIncremental:
                 newLikelihood = oldLikelihood + likelihood*congruence
-                newLikelihood= max(min(newLikelihood,1), 0)
+                newLikelihood= max(min(newLikelihood,1), -1)
             else:
                 newLikelihood = (congruence * likelihood + 1.0)/2.0
         goal.likelihood=newLikelihood

@@ -10,8 +10,10 @@ for i in range(NUM_EPISODES):
     engine.debug = False
     agent1 = engine.createAgent("EmoCha")
     goal = engine.createGoalForAgent("EmoCha", "GetGold", 1.0, False)
-    newBeliefAboutGoal = {'GetGold': True}
+    goal2 = engine.createGoalForAgent("EmoCha", "CloseToGold", 1.0, False)
+    newBeliefAboutGoal = {'GetGold': True, 'CloseToGold': True}
     steps = 0
+    closeToGoldCounter = 0
     while not done:
         roullet = np.random.random()
         if roullet < 0.1:
@@ -25,11 +27,18 @@ for i in range(NUM_EPISODES):
             newBeliefAboutGoal['GetGold'] = False
             print("GameOver!!!")
         elif roullet < 0.5:
-            engine.appraiseBelief(0.5, "EmoCha", ["GetGold"], [1.0], not newBeliefAboutGoal['GetGold'])
+            engine.appraiseBelief(1.0, "EmoCha", ["CloseToGold"], [1.0], False)
+            engine.appraiseBelief(max(closeToGoldCounter/100, 0.9), "EmoCha", ["GetGold"], [0.5], not newBeliefAboutGoal['GetGold'])
             newBeliefAboutGoal['GetGold'] = False
+            closeToGoldCounter += 1
             print("Closer to goal!")
         elif roullet < 1.0:
-            engine.appraiseBelief(0.5, "EmoCha", ["GetGold"], [-1.0], not newBeliefAboutGoal['GetGold'])
+            closeToGoldCounter -= 1.0
+            if closeToGoldCounter < 0.0:
+                closeToGoldCounter = 0.0
+            p = 100 - closeToGoldCounter
+            engine.appraiseBelief(1.0, "EmoCha", ["CloseToGold"], [-1.0], False)
+            engine.appraiseBelief(max(0, min(0.9, p/100) ), "EmoCha", ["GetGold"], [-0.5], not newBeliefAboutGoal['GetGold'])
             newBeliefAboutGoal['GetGold'] = False
             print("Stayed farther from the goal!")
         time.sleep(0.1)
